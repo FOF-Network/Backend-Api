@@ -6,6 +6,7 @@ import (
 )
 
 type ContactModel struct {
+	ID        uint      `json:"id"`
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	BirthDay  time.Time `json:"birth_day"`

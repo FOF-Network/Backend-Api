@@ -14,16 +14,21 @@ func Get(db db.DB, env map[string]string) func(c echo.Context) error {
 			return c.JSON(http.StatusUnauthorized, nil)
 		}
 		
-		
+		var contacts []*mydb.ContactModel
 		csc := c.Param("csc")
-		contacts, err := db.GetContacts(id)
+		firstContacts, err := db.GetContacts(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, nil)
 		}
 		
 		if csc == "true" {
-			firstContacts := contacts
-			db
+			for _, firstContact := range firstContacts {
+				secondContacts, err := db.GetContacts(firstContact.id)
+				if err != nil {
+				return c.JSON(http.StatusInternalServerError, nil)
+				}
+				
+			}
 		}
 
 
