@@ -21,4 +21,33 @@ func (db *MySql) GetIDFromToken(Token string) (uint, error) {
 	return id, nil
 }
 
-func (db)
+func (db *MySql) GetContacts(id uint) ([]*Contact, error) {
+	stmt, err := db.Connection.Prepare(`select * from contacts where id = ?`)
+	if err != nil {
+		return 0, err
+	}
+
+	contacts := make([]*Contact, 0, 10)
+	rows, err := stmt.Query(id)
+	if err != nil {
+		return contacts, err
+	}
+
+	for rows.Next() {
+		contact := new(Contact)
+		err = rows.Scan(
+			&contact.FirstName, 
+			&contact.LastName, 
+			&contact.Email, 
+			&contact.BirthDay, 
+			&contact.Job, 
+			&contact.Interests, 
+			contact.CityID)
+		if err != nil {
+			return contacts, err
+		}
+		contacts = append(contacts, contact)
+	}
+
+	return contacts, rows.Err()
+}
