@@ -27,14 +27,14 @@ func (db *MySql) GetContacts(id uint) ([]*ContactModel, error) {
 		return 0, err
 	}
 
-	contacts := make([]*Contact, 0, 10)
+	contacts := make([]*ContactModel, 0, 10)
 	rows, err := stmt.Query(id)
 	if err != nil {
 		return contacts, err
 	}
 
 	for rows.Next() {
-		contact := new(Contact)
+		contact := new(ContactModel)
 		err = rows.Scan(
 			&contact.FirstName, 
 			&contact.LastName, 

@@ -16,7 +16,7 @@ func Get(db db.DB, env map[string]string) func(c echo.Context) error {
 		
 		var contacts []*mydb.ContactModel
 		csc := c.Param("csc")
-		firstContacts, err := db.GetContacts(id)
+		firstContacts, err := mydb.GetContacts(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, nil)
 		}
@@ -27,7 +27,7 @@ func Get(db db.DB, env map[string]string) func(c echo.Context) error {
 				if err != nil {
 				return c.JSON(http.StatusInternalServerError, nil)
 				}
-				
+
 			}
 		}
 
