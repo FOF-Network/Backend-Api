@@ -1,35 +1,37 @@
 package handler
 
 import (
-	"net/http"
 	"Backend-Api/mydb"
+	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo"
 )
 
-func Get(db db.DB, env map[string]string) func(c echo.Context) error {
+func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		id, err := db.GetIDFromToken(c.Request().Header.Get("authorization"))
 		if err != nil || id == 0 {
 			return c.JSON(http.StatusUnauthorized, nil)
 		}
 		
-		var contacts []*mydb.ContactModel
 		csc := c.Param("csc")
-		firstContacts, err := mydb.GetContacts(id)
+		contacts, err := db.GetContacts(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, nil)
 		}
 		
 		if csc == "true" {
-			for _, firstContact := range firstContacts {
-				secondContacts, err := db.GetContacts(firstContact.id)
+			var secondContacts []*mydb.ContactModel
+			for _, contact := range contacts {
+				cc, err := db.GetContacts(contact.ID)
 				if err != nil {
-				return c.JSON(http.StatusInternalServerError, nil)
+					return c.JSON(http.StatusInternalServerError, nil)
 				}
-
+				secondContacts = append(secondContacts, cc)
 			}
-		}
+			contacts = secondContacts
+		} 
 
 
 		for _, contact := range contacts {
