@@ -1,4 +1,4 @@
-package db
+package mydb
 
 import "database/sql"
 
@@ -21,7 +21,7 @@ func (db *MySql) GetIDFromToken(Token string) (uint, error) {
 	return id, nil
 }
 
-func (db *MySql) GetContacts(id uint) ([]*Contact, error) {
+func (db *MySql) GetContacts(id uint) ([]*ContactModel, error) {
 	stmt, err := db.Connection.Prepare(`select * from contacts where id = ?`)
 	if err != nil {
 		return 0, err
