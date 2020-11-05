@@ -1,6 +1,7 @@
 package db
 
 import "time"
+import "Backend-Api/handler"
 
 type Contact struct {
 	FirstName string    `json:"first_name"`
@@ -10,7 +11,7 @@ type Contact struct {
 	Job       string    `json:"job"`
 	Interests string	`json:"interests"`
 	CityName    uint    `json:"city_name"`
-	CityTimeAndWaether 
+	GeoInfo    handler.WeatherStackRes `json:"geo_info"`
 }
 
 type DB interface {

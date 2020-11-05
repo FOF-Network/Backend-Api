@@ -42,7 +42,7 @@ func (db *MySql) GetContacts(id uint) ([]*Contact, error) {
 			&contact.BirthDay, 
 			&contact.Job, 
 			&contact.Interests, 
-			contact.CityID)
+			&contact.CityName)
 		if err != nil {
 			return contacts, err
 		}
