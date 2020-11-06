@@ -11,4 +11,6 @@ type DB interface {
 	InsertContact(userID uint, contact *models.ContactModel) error
 	UpdateContact(contactID uint, contact *models.ContactModel) error
 	DeleteContact(contactID uint) error
+	InsertUser(user *models.User) error
+	UpdateUser(userID uint, user *models.User) error
 }

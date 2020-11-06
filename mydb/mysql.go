@@ -42,6 +42,7 @@ func (db *MySql) GetContacts(id uint) ([]*models.ContactModel, error) {
 		err = rows.Scan(
 			&contact.FirstName, 
 			&contact.LastName, 
+			&contact.Cellphone,
 			&contact.Email, 
 			&contact.BirthDay, 
 			&contact.Job, 
@@ -73,20 +74,20 @@ func (db *MySql) GetContact(id uint) (*models.ContactModel, error) {
 
 
 func (db *MySql) InsertContact(userID uint, contact *models.ContactModel) error {
-	stmt, err := db.Connection.Prepare(`insert into contacts (first_name, last_name, birth_day, email, job, interests, city_name, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, current_timestamp, current_timestamp)`)
+	stmt, err := db.Connection.Prepare(`insert into contacts (first_name, last_name, cellphone, birth_day, email, job, interests, city_name, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, current_timestamp, current_timestamp)`)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(contact.FirstName, contact.LastName, contact.BirthDay, contact.Email, contact.Job, contact.Interests, contact.CityName)
+	_, err = stmt.Exec(contact.FirstName, contact.LastName, contact.Cellphone, contact.BirthDay, contact.Email, contact.Job, contact.Interests, contact.CityName)
 	return err
 }
 
 func (db *MySql) UpdateContact(contactID uint, contact *models.ContactModel) error {
-	stmt, err := db.Connection.Prepare(`update contacts set first_name = ?, last_name = ?, birth_day = ?, email = ?, job = ?, interests = ?, city_name = ?, updated_at = current_timestamp where id = ?`)
+	stmt, err := db.Connection.Prepare(`update contacts set first_name = ?, last_name = ?, cellphone = ?, birth_day = ?, email = ?, job = ?, interests = ?, city_name = ?, updated_at = current_timestamp where id = ?`)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(contact.FirstName, contact.LastName, contact.BirthDay, contact.Email, contact.Job, contact.Interests, contact.CityName, contactID)
+	_, err = stmt.Exec(contact.FirstName, contact.LastName, contact.Cellphone, contact.BirthDay, contact.Email, contact.Job, contact.Interests, contact.CityName, contactID)
 	return err
 }
 
@@ -98,4 +99,22 @@ func (db *MySql) DeleteContact(contactID uint) error {
 	_, err = stmt.Exec(contactID)
 	return err
 
+}
+
+func (db *MySql) InsertUser(user *models.User) error {
+	stmt, err := db.Connection.Prepare(`insert into users (first_name, last_name, cellphone, password, birth_day, email, job, interests, city_name, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, current_timestamp, current_timestamp)`)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(user.FirstName, user.LastName, user.Cellphone, user.Password, user.BirthDay, user.Email, user.Job, user.Interests, user.CityName)
+	return err
+}
+
+func (db *MySql) UpdateUser(userID uint, user *models.User) error {
+	stmt, err := db.Connection.Prepare(`update users set first_name = ?, last_name = ?, cellphone = ?, password = ?, birth_day = ?, email = ?, job = ?, interests = ?, city_name = ?, updated_at = current_timestamp where id = ?`)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(user.FirstName, user.LastName, user.Cellphone, user.BirthDay, user.Email, user.Job, user.Interests, user.CityName, userID)
+	return err
 }
