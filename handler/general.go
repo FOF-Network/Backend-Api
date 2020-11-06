@@ -3,31 +3,12 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"Backend-Api/models"
 )
 
 
-
-type WeatherStackRes struct {
-	Success bool `json:"success"`
-	Location struct {
-		Name string `json:"string"`
-		Country string `json:"country"`
-		Localtime string `json:"localtime"`
-	} `json:"location"`
-	Current struct {
-		Temperature int `json:"temperature"`
-		WeatherDescriptions []string `json:"weather_descriptions"`
-
-	} `json:"current"`
-	Error   struct {
-		Code int `json:"code"`
-		Type string `json:"type"`
-		Info string `json:info`
-	} `json:"error"`
-}
-
-func WeatherStackReq (name string, token string) (*WeatherStackRes, error) {
-	Wres := new(WeatherStackRes)
+func WeatherStackReq (name string, token string) (*models.WeatherStackRes, error) {
+	Wres := new(models.WeatherStackRes)
 	httpClient := http.Client{}
 
  	req, err := http.NewRequest("GET", "https://api.weatherstack.com/current", nil)

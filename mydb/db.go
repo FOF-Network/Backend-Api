@@ -1,25 +1,14 @@
 package mydb
 
-import (
-	"time"
-	"Backend-Api/handler"
-)
-
-type ContactModel struct {
-	ID        uint      `json:"-"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	BirthDay  time.Time `json:"birth_day"`
-	Email     string    `json:"email"`
-	Job       string    `json:"job"`
-	Interests string	`json:"interests"`
-	CityName    string    `json:"city_name"`
-	GeoInfo    handler.WeatherStackRes `json:"geo_info"`
-}
+import "Backend-Api/models"
 
 type DB interface {
 	GetIDFromToken(token string) (uint, error)
-	GetContacts(id uint) ([]*ContactModel, error)
+	GetContacts(id uint) ([]*models.ContactModel, error)
+	GetContact(id uint) (*models.ContactModel, error)
 	GetCity(id uint) ()
 	SetToken(userID uint) error
+	InsertContact(userID uint, contact *models.ContactModel) error
+	UpdateContact(contactID uint, contact *models.ContactModel) error
+	DeleteContact(contactID uint) error
 }
