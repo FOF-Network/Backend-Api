@@ -62,10 +62,10 @@ func Add(db mydb.DB) func(c echo.Context) error {
 
 		err = db.InsertContact(id, contact)
 		if err != nil {
-			return c.JSON(http.StatusOK, nil)
+			return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"error": err.Error()})
 		}
 
-		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"error": err.Error()})
+		return c.JSON(http.StatusOK, nil)
 	}
 }
 
@@ -84,10 +84,9 @@ func Edit(db mydb.DB) func(c echo.Context) error {
 
 		err = db.UpdateContact(id, contact)
 		if err != nil {
-			return c.JSON(http.StatusOK, nil)
+			return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"error": err.Error()})
 		}
-
-		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"error": err.Error()})
+		return c.JSON(http.StatusOK, nil)
 	}
 }
 

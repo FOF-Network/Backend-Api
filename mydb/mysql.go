@@ -4,10 +4,43 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"Backend-Api/models"
+	"fmt"
 )
 
 type MySql struct {
 	Connection *sql.DB
+}
+
+func New(Env map[string]string) (*MySql, error) {
+	db, err := sql.Open("mysql",
+	fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&collation=utf8_unicode_ci&readTimeout=%s",
+	Env["DB_USER"],
+	Env["DB_PASS"],
+	Env["DB_HOST"],
+	Env["DB_PORT"],
+	Env["DB_NAME"],
+	Env["DB_READ_TIMEOUT"],
+	))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &MySql{Connection: db}, nil
+}
+
+func (db *MySql) SetToken(userID uint, token string) error {
+	stmt, err := db.Connection.Prepare(`insert into user_tokens (user_id, token) values (?, ?)`)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(userID, token)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (db *MySql) GetIDFromToken(Token string) (uint, error) {
@@ -108,6 +141,21 @@ func (db *MySql) InsertUser(user *models.User) error {
 	}
 	_, err = stmt.Exec(user.FirstName, user.LastName, user.Cellphone, user.Password, user.BirthDay, user.Email, user.Job, user.Interests, user.CityName)
 	return err
+}
+
+func (db *MySql) GetUser(userID uint) (*models.User, error) {
+	stmt, err := db.Connection.Prepare(`select * from users where id = ?`)
+	if err != nil {
+		return nil, err
+	}
+
+	user := new(models.User)
+	err = stmt.QueryRow(userID).Scan(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (db *MySql) UpdateUser(userID uint, user *models.User) error {
