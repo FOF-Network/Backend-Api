@@ -36,7 +36,7 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 
 
 		for _, contact := range contacts {
-			w, err := WeatherStackReq(contact.CityName, env["token"])
+			w, err := WeatherStackReq(contact.CityName, env["WHT_TOKEN"])
 			if err != nil || id == 0 {
 				return c.JSON(http.StatusUnauthorized, nil)
 			}
