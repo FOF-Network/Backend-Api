@@ -3,7 +3,9 @@ package handler
 import (
 	"Backend-Api/models"
 	"Backend-Api/mydb"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -18,6 +20,7 @@ func Register(db mydb.DB) func(c echo.Context) error {
 
 		err = db.InsertUser(user)
 		if err != nil {
+			log.Print(err.Error())
 			return c.JSON(http.StatusServiceUnavailable, nil)
 		}
 
@@ -55,18 +58,20 @@ func LogIn(db mydb.DB) func(c echo.Context) error {
 			return c.JSON(http.StatusUnprocessableEntity, nil)
 		}
 
-		oUser, err := db.GetUser(user.ID)
+		oUser, err := db.GetUserWithCellphone(user.Cellphone)
 		if err != nil {
+			log.Print(err.Error())
 			return c.JSON(http.StatusServiceUnavailable, nil)
 		}
 
 		if oUser.Password == user.Password {
-			token := "lmvfdmvps"
+			token := "lmvfdmvps" + strconv.FormatUint(uint64(oUser.ID), 10)
 			err = db.SetToken(oUser.ID, token)
 			if err != nil {
+				log.Print(err.Error())
 				return c.JSON(http.StatusServiceUnavailable, nil)
 			}
-			return c.JSON(http.StatusOK, nil)
+			return c.JSON(http.StatusOK, echo.Map{"token":token})
 		}
 		return c.JSON(http.StatusUnauthorized, nil)
 	}

@@ -29,4 +29,6 @@ func main() {
 	e.POST("/contact", handler.Add(ourDB))
 	e.PATCH("/contact", handler.Edit(ourDB))
 	e.DELETE("/contact", handler.Delete(ourDB))
+
+	e.Logger.Fatal(e.Start(":9696"))
 }

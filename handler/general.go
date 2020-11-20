@@ -11,7 +11,7 @@ func WeatherStackReq (name string, token string) (*models.WeatherStackRes, error
 	Wres := new(models.WeatherStackRes)
 	httpClient := http.Client{}
 
- 	req, err := http.NewRequest("GET", "https://api.weatherstack.com/current", nil)
+ 	req, err := http.NewRequest("GET", "http://api.weatherstack.com/current", nil)
   	if err != nil {
     	return Wres, nil
   	}
