@@ -162,6 +162,9 @@ func (db *MySql) GetUser(userID uint) (*models.User, error) {
 func (db *MySql) GetUserWithCellphone(cellphone string) (*models.User, error) {
 	stmt, err := db.Connection.Prepare(`select id, password from users where cellphone = ?`)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 

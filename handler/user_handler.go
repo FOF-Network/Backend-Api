@@ -5,7 +5,6 @@ import (
 	"Backend-Api/mydb"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo"
 	"github.com/thanhpk/randstr"
@@ -17,6 +16,12 @@ func Register(db mydb.DB) func(c echo.Context) error {
 		err := c.Bind(user)
 		if err != nil {
 			return c.JSON(http.StatusUnprocessableEntity, nil)
+		}
+		u, err := db.GetUserWithCellphone(user.Cellphone)
+
+		if u != nil {
+			log.Print(err.Error())
+			return c.JSON(http.StatusServiceUnavailable, nil)
 		}
 
 		err = db.InsertUser(user)
