@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/thanhpk/randstr"
 )
 
 func Register(db mydb.DB) func(c echo.Context) error {
@@ -65,7 +66,8 @@ func LogIn(db mydb.DB) func(c echo.Context) error {
 		}
 
 		if oUser.Password == user.Password {
-			token := "lmvfdmvps" + strconv.FormatUint(uint64(oUser.ID), 10)
+			token := randstr.String(10) 
+		
 			err = db.SetToken(oUser.ID, token)
 			if err != nil {
 				log.Print(err.Error())
