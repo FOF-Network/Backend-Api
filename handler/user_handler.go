@@ -20,7 +20,6 @@ func Register(db mydb.DB) func(c echo.Context) error {
 		u, err := db.GetUserWithCellphone(user.Cellphone)
 
 		if u != nil {
-			log.Print(err.Error())
 			return c.JSON(http.StatusServiceUnavailable, nil)
 		}
 

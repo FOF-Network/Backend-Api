@@ -48,6 +48,7 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 				contact.GeoInfo = nil
 			}
 			contact.GeoInfo = w
+			contact.Cellphone = ""
 		}
 			
 		return c.JSON(http.StatusOK, contacts)	
