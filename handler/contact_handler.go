@@ -68,17 +68,17 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 		} 
 
 
-		// for _, contact := range contacts {
-		// 	w, err := WeatherStackReq(contact.CityName, env["WHT_TOKEN"])
-		// 	if err != nil {
-		// 		contact.GeoInfo = nil
-		// 	}
-		// 	contact.GeoInfo = w
+		for _, contact := range contacts {
+			w, err := WeatherStackReq(contact.CityName, env["WHT_TOKEN"])
+			if err != nil {
+				contact.GeoInfo = nil
+			}
+			contact.GeoInfo = w
 
-		// 	if csc == "true" {
-		// 		contact.Cellphone = ""
-		// 	}
-		// }
+			if csc == "true" {
+				contact.Cellphone = ""
+			}
+		}
 		
 		return c.JSON(http.StatusOK, contacts)	
 	}
