@@ -30,5 +30,5 @@ func main() {
 	e.PATCH("/contact", handler.Edit(ourDB))
 	e.DELETE("/contact", handler.Delete(ourDB))
 
-	e.Logger.Fatal(e.Start(":9696"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
