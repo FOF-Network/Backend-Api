@@ -35,6 +35,7 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 			for _, contact := range contacts {
 				cc, err := db.GetContacts(contact.Cellphone)
 				if err != nil {
+					log.Print(err.Error())
 					return c.JSON(http.StatusInternalServerError, nil)
 				}
 				secondContacts = append(secondContacts, cc...)
@@ -44,9 +45,10 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 			for _, cont := range contacts {
 				oc, err := db.GetContactWithCell(cont.UserCellphone)
 				if err != nil {
+					log.Print(cont.UserCellphone)
 					return c.JSON(http.StatusInternalServerError, nil)
 				}
-				cont.Owners = []models.Owner{{FirstName: oc.FirstName, LastName: oc.LastName, Cellphone: oc.Cellphone}}
+				cont.Owners = []models.Owner{{FirstName: oc.FirstName, LastName: oc.LastName, Cellphone: cont.UserCellphone}}
 			}
 
 			check := map[string]int{}
@@ -66,15 +68,18 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 		} 
 
 
-		for _, contact := range contacts {
-			w, err := WeatherStackReq(contact.CityName, env["WHT_TOKEN"])
-			if err != nil {
-				contact.GeoInfo = nil
-			}
-			contact.GeoInfo = w
-			contact.Cellphone = ""
-		}
-			
+		// for _, contact := range contacts {
+		// 	w, err := WeatherStackReq(contact.CityName, env["WHT_TOKEN"])
+		// 	if err != nil {
+		// 		contact.GeoInfo = nil
+		// 	}
+		// 	contact.GeoInfo = w
+
+		// 	if csc == "true" {
+		// 		contact.Cellphone = ""
+		// 	}
+		// }
+		
 		return c.JSON(http.StatusOK, contacts)	
 	}
 }

@@ -59,7 +59,7 @@ func (db *MySql) GetIDFromToken(Token string) (uint, error) {
 }
 
 func (db *MySql) GetContacts(cellphone string) ([]*models.ContactModel, error) {
-	stmt, err := db.Connection.Prepare(`select first_name, last_name, cellphone, email, birth_day, birth_month, job, interests, city_name from contacts where user_cellphone = ?`)
+	stmt, err := db.Connection.Prepare(`select first_name, last_name, user_cellphone, cellphone, email, birth_day, birth_month, job, interests, city_name from contacts where user_cellphone = ?`)
 	if err != nil {
 		return nil, err
 	}
@@ -75,6 +75,7 @@ func (db *MySql) GetContacts(cellphone string) ([]*models.ContactModel, error) {
 		err = rows.Scan(
 			&contact.FirstName, 
 			&contact.LastName, 
+			&contact.UserCellphone,
 			&contact.Cellphone,
 			&contact.Email, 
 			&contact.BirthDay, 
@@ -92,7 +93,7 @@ func (db *MySql) GetContacts(cellphone string) ([]*models.ContactModel, error) {
 }
 
 func (db *MySql) GetContactWithCell(cellphone string) (*models.ContactModel, error) {
-	stmt, err := db.Connection.Prepare(`select first_name, last_name, cellphone from contacts where user_cellphone = ?`)
+	stmt, err := db.Connection.Prepare(`select first_name, last_name, cellphone from contacts where cellphone = ?`)
 	if err != nil {
 		return nil, err
 	}
