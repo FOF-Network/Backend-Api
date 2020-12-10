@@ -91,6 +91,21 @@ func (db *MySql) GetContacts(cellphone string) ([]*models.ContactModel, error) {
 	return contacts, rows.Err()
 }
 
+func (db *MySql) GetContactWithCell(cellphone string) (*models.ContactModel, error) {
+	stmt, err := db.Connection.Prepare(`select first_name, last_name, cellphone from contacts where user_cellphone = ?`)
+	if err != nil {
+		return nil, err
+	}
+
+	contact := new(models.ContactModel)
+	err = stmt.QueryRow(cellphone).Scan(&contact.FirstName, &contact.LastName, &contact.Cellphone)
+	if err != nil {
+		return nil, err
+	}
+
+	return contact, nil
+}
+
 func (db *MySql) GetContactUserCell(id uint) (*string, error) {
 	stmt, err := db.Connection.Prepare(`select user_cellphone from contacts where id = ?`)
 	if err != nil {

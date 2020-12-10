@@ -31,6 +31,7 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 		
 		if csc == "true" {
 			var secondContacts []*models.ContactModel
+			var HelpContacts []*models.ContactModel
 			for _, contact := range contacts {
 				cc, err := db.GetContacts(contact.Cellphone)
 				if err != nil {
@@ -39,6 +40,29 @@ func Get(db mydb.DB, env map[string]string) func(c echo.Context) error {
 				secondContacts = append(secondContacts, cc...)
 			}
 			contacts = secondContacts
+
+			for _, cont := range contacts {
+				oc, err := db.GetContactWithCell(cont.UserCellphone)
+				if err != nil {
+					return c.JSON(http.StatusInternalServerError, nil)
+				}
+				cont.Owners = []models.Owner{{FirstName: oc.FirstName, LastName: oc.LastName, Cellphone: oc.Cellphone}}
+			}
+
+			check := map[string]int{}
+			andis := 0
+
+			for _, cont := range contacts {
+				if v, found := check[cont.Cellphone]; found {
+					HelpContacts[v].Owners = append(HelpContacts[v].Owners, cont.Owners...)
+				} else {
+					HelpContacts = append(HelpContacts, cont)
+					check[cont.Cellphone] = andis
+					andis++
+				}
+			}
+			
+			contacts = HelpContacts
 		} 
 
 

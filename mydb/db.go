@@ -5,6 +5,7 @@ import "Backend-Api/models"
 type DB interface {
 	GetIDFromToken(token string) (uint, error)
 	GetContacts(cellphone string) ([]*models.ContactModel, error)
+	GetContactWithCell(cellphone string) (*models.ContactModel, error)
 	GetContactUserCell(id uint) (*string, error)
 	SetToken(userID uint, token string) error
 	InsertContact(userCellphone string, contact *models.ContactModel) error
